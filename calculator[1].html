@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Glassland – Калкулатор</title>
+  <style>
+    :root { --bg:#0b0f14; --card:#121923; --muted:#9fb0c3; --acc:#21a3ff; --text:#e9f2ff; }
+    *{box-sizing:border-box}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);margin:0}
+    nav{display:flex;gap:16px;padding:14px 20px;background:#111723;border-bottom:1px solid #1e2a36;position:sticky;top:0}
+    nav a{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:12px}
+    nav a:hover{background:#182332;color:#fff}
+    main{max-width:1100px;margin:24px auto;padding:0 16px 60px}
+    h1{font-size:28px;margin:8px 0 16px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    @media (max-width:900px){.grid{grid-template-columns:1fr}}
+    .card{background:var(--card);border:1px solid #1d2a36;border-radius:16px;padding:16px}
+    label{display:block;margin:8px 0 6px;color:#d6e6f7}
+    select,input[type="number"]{width:100%;padding:10px;border-radius:10px;border:1px solid #2a3949;background:#0f1620;color:#fff}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .muted{color:#9fb0c3;font-size:13px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    button{padding:10px 14px;border-radius:12px;border:1px solid #2a3c4e;background:#0e65a6;color:#fff;cursor:pointer}
+    button:hover{background:#1185db}
+    .total{font-size:28px;margin:6px 0 4px}
+    .line{display:flex;justify-content:space-between;border-bottom:1px dashed #213141;padding:6px 0}
+    .line b{color:#fff}
+    .box{padding:10px;border-radius:12px;background:#0f1720;border:1px solid #1e2a36}
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html">Начало</a>
+    <a href="services.html">Услуги</a>
+    <a href="categories.html">Категории</a>
+    <a href="calculator.html">Калкулатор</a>
+  </nav>
+  <main>
+    <h1>Калкулатор</h1>
+    <div class="grid">
+      <section class="card">
+        <label for="category">Категория</label>
+        <select id="category">
+          <option value="mirror">Огледала</option>
+          <option value="glass">Стъкла</option>
+        </select>
+
+        <label for="subcategory">Продукт</label>
+        <select id="subcategory"></select>
+
+        <div class="row">
+          <div>
+            <label for="width">Ширина (см)</label>
+            <input id="width" type="number" value="100" min="1" step="1">
+          </div>
+          <div>
+            <label for="height">Височина (см)</label>
+            <input id="height" type="number" value="100" min="1" step="1">
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="qty">Брой</label>
+            <input id="qty" type="number" value="1" min="1" step="1">
+          </div>
+          <div>
+            <label for="holes">Отвори (бр.)</label>
+            <input id="holes" type="number" value="0" min="0" step="1">
+          </div>
+        </div>
+
+        <div class="box" style="margin-top:10px">
+          <label><input type="checkbox" id="edge"> Шлайф по периметър</label>
+          <label><input type="checkbox" id="film"> Защитно фолио</label>
+          <label><input type="checkbox" id="install"> С монтаж</label>
+          <p class="muted" id="extrasNote"></p>
+        </div>
+
+        <div class="actions">
+          <button id="calcBtn">Изчисли</button>
+          <button id="shareBtn">Копирай линк с избора</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="line"><span>Продукт</span><b id="prodName">—</b></div>
+        <div class="line"><span>Площ (м²)</span><b id="area">0.00</b></div>
+        <div class="line"><span>Периметър (л.м.)</span><b id="perimeter">0.00</b></div>
+        <div class="line"><span>Ед. цена (лв/м²)</span><b id="unitPrice">0.00</b></div>
+        <div class="line"><span>База (лв)</span><b id="base">0.00</b></div>
+        <div class="line"><span>Шлайф</span><b id="edgePrice">0.00</b></div>
+        <div class="line"><span>Фолио</span><b id="filmPrice">0.00</b></div>
+        <div class="line"><span>Отвори</span><b id="holesPrice">0.00</b></div>
+        <div class="line"><span>Монтаж</span><b id="installPrice">0.00</b></div>
+        <div class="line"><span>Брой</span><b id="qtyOut">1</b></div>
+        <div class="line"><span>Междинна сума</span><b id="subtotal">0.00</b></div>
+        <h2 class="total">Общо: <span id="total">0.00</span> лв</h2>
+        <p class="muted">Цените са ориентировъчни. Финална оферта – след оглед/заявка.</p>
+      </section>
+    </div>
+  </main>
+
+  <script>
+  // === ЦЕНИ (лв/м²)
+  const PRICE_TABLE = {
+    mirror: {
+      'Огледало 3мм (праволинейно)': 64,
+      'Огледало 4мм (праволинейно)': 67,
+      'Огледало 6мм (праволинейно)': 116,
+      'Огледало 3мм (неправолинейно)': 67,
+      'Огледало 4мм (неправолинейно)': 75,
+      extras: { edgePerimeterLm: 8, safetyFilmSqm: 18, holesFlat: 12, installPercent: 0.20 }
+    },
+    glass: {
+      // Закалено прозрачно
+      'Закалено прозрачно 4мм': 89,
+      'Закалено прозрачно 5мм': 99,
+      'Закалено прозрачно 6мм': 109,
+      'Закалено прозрачно 8мм': 129,
+      'Закалено прозрачно 8мм (Shower Guard+)': 239,
+      'Закалено прозрачно 10мм': 151,
+      // Закалено матирано
+      'Закалено матирано 4мм': 111,
+      'Закалено матирано 5мм': 129,
+      'Закалено матирано 6мм': 149,
+      'Закалено матирано 8мм': 179,
+      'Закалено матирано 10мм': 239,
+      // Матирано (нетемп.)
+      'Матирано (нетемп.) 4мм': 70,
+      'Матирано (нетемп.) 5мм': 80,
+      'Матирано (нетемп.) 6мм': 94,
+      'Матирано (нетемп.) 8мм': 139,
+      'Матирано (нетемп.) 10мм': 179,
+      // Прозрачно (нетемп.)
+      'Прозрачно 2мм': 37,
+      'Антирефлекторно 2мм': 46,
+      'Прозрачно 3мм': 37,
+      'Прозрачно 4мм': 47,
+      'Прозрачно 5мм': 62,
+      'Прозрачно 6мм': 71,
+      'Прозрачно 8мм': 92,
+      'Прозрачно 10мм': 111,
+      'Прозрачно 12мм': 166,
+      // Орнаментни
+      'Орнамент Фантазия': 68,
+      'Орнамент Хасир': 68,
+      'Орнамент Делта мат': 131,
+      'Орнамент Чинчила': 60,
+      'Орнамент Флейта': 122,
+      // Огнеупорно
+      'Огнеупорно': 636,
+      // Лакобел
+      'Лакобел RAL9003': 110,
+      'Лакобел RAL9010': 110,
+      'Лакобел RAL9005': 110,
+      // Цветни (бронзе/сиво)
+      'Цветно 4мм (бронзе/сиво)': 70,
+      'Цветно 5мм (бронзе/сиво)': 90,
+      'Цветно 6мм (бронзе/сиво)': 110,
+      'Цветно 8мм (бронзе/сиво)': 144,
+      'Цветно 10мм (бронзе/сиво)': 200,
+      // Армирано
+      'Армирано 6мм': 107,
+
+      extras: { edgePerimeterLm: 10, safetyFilmSqm: 0, holesFlat: 15, installPercent: 0.22 }
+    }
+  };
+
+  const categoryEl = document.getElementById('category');
+  const subcatEl = document.getElementById('subcategory');
+
+  function populateSubcats(){
+    const cat = categoryEl.value;
+    subcatEl.innerHTML = '';
+    const items = Object.keys(PRICE_TABLE[cat]).filter(k => k !== 'extras');
+    items.forEach(name => {
+      const opt = document.createElement('option');
+      opt.value = name;
+      opt.textContent = name;
+      subcatEl.appendChild(opt);
+    });
+    updateExtrasNote();
+  }
+
+  function getNumbers(){
+    const w = Math.max(0, parseFloat(document.getElementById('width').value || '0'));
+    const h = Math.max(0, parseFloat(document.getElementById('height').value || '0'));
+    const qty = Math.max(1, parseInt(document.getElementById('qty').value || '1'));
+    const holes = Math.max(0, parseInt(document.getElementById('holes').value || '0'));
+    const edge = document.getElementById('edge').checked;
+    const film = document.getElementById('film').checked;
+    const install = document.getElementById('install').checked;
+    return {w,h,qty,holes,edge,film,install};
+  }
+
+  function updateExtrasNote(){
+    const cat = categoryEl.value;
+    const ex = PRICE_TABLE[cat].extras || {};
+    const note = [
+      'Шлайф: ' + (ex.edgePerimeterLm || 0) + ' лв/л.м.',
+      'Фолио: ' + (ex.safetyFilmSqm || 0) + ' лв/м²',
+      'Отвори: ' + (ex.holesFlat || 0) + ' лв/бр.',
+      'Монтаж: ' + Math.round((ex.installPercent||0)*100) + '%'
+    ].join(' • ');
+    document.getElementById('extrasNote').textContent = note;
+  }
+
+  function calcOnce(){
+    const cat = categoryEl.value;
+    const item = subcatEl.value;
+    const unit = PRICE_TABLE[cat][item] || 0;
+    const ex = PRICE_TABLE[cat].extras || {};
+    const {w,h,qty,holes,edge,film,install} = getNumbers();
+
+    const area = (w*h)/10000; // м²
+    const perimeter = 2*(w+h)/100; // л.м.
+
+    const base = unit * area;
+    const edgePrice = edge ? (ex.edgePerimeterLm||0) * perimeter : 0;
+    const filmPrice = film ? (ex.safetyFilmSqm||0) * area : 0;
+    const holesPrice = (ex.holesFlat||0) * holes;
+    const subtotalOne = base + edgePrice + filmPrice + holesPrice;
+    const installPrice = install ? subtotalOne * (ex.installPercent||0) : 0;
+    const one = subtotalOne + installPrice;
+    const total = one * qty;
+
+    // Update UI
+    document.getElementById('prodName').textContent = item || '—';
+    document.getElementById('area').textContent = area.toFixed(2);
+    document.getElementById('perimeter').textContent = perimeter.toFixed(2);
+    document.getElementById('unitPrice').textContent = unit.toFixed(2);
+    document.getElementById('base').textContent = base.toFixed(2);
+    document.getElementById('edgePrice').textContent = edgePrice.toFixed(2);
+    document.getElementById('filmPrice').textContent = filmPrice.toFixed(2);
+    document.getElementById('holesPrice').textContent = holesPrice.toFixed(2);
+    document.getElementById('installPrice').textContent = installPrice.toFixed(2);
+    document.getElementById('qtyOut').textContent = qty;
+    document.getElementById('subtotal').textContent = one.toFixed(2);
+    document.getElementById('total').textContent = total.toFixed(2);
+  }
+
+  function updatePrice(){ calcOnce(); }
+
+  // Прочети ?cat=...&item=...
+  function preselectFromQuery(){
+    const p = new URLSearchParams(location.search);
+    const cat = p.get('cat');      // mirror | glass
+    const item = p.get('item');    // текст 1:1 като ключ в PRICE_TABLE[cat]
+
+    if (cat && PRICE_TABLE[cat]) {
+      document.getElementById('category').value = cat;
+      if (typeof populateSubcats === 'function') populateSubcats();
+
+      if (item) {
+        const sub = document.getElementById('subcategory');
+        [...sub.options].forEach(o => { if (o.value === item) sub.value = item; });
+      }
+      if (typeof updatePrice === 'function') updatePrice();
+    } else {
+      populateSubcats();
+      updatePrice();
+    }
+  }
+
+  // Events
+  categoryEl.addEventListener('change', ()=>{ populateSubcats(); updatePrice(); });
+  document.getElementById('subcategory').addEventListener('change', updatePrice);
+  ['width','height','qty','holes','edge','film','install'].forEach(id=>{
+    document.getElementById(id).addEventListener('input', updatePrice);
+    document.getElementById(id).addEventListener('change', updatePrice);
+  });
+  document.getElementById('calcBtn').addEventListener('click', updatePrice);
+  document.getElementById('shareBtn').addEventListener('click', ()=>{
+    const cat = categoryEl.value;
+    const item = subcatEl.value;
+    const url = location.origin + location.pathname.replace(/[^/]+$/,'') + 'calculator.html?cat=' +
+                encodeURIComponent(cat) + '&item=' + encodeURIComponent(item);
+    navigator.clipboard.writeText(url).then(()=>{
+      alert('Линкът е копиран: ' + url);
+    },()=>{
+      prompt('Копирай линка:', url);
+    });
+  });
+
+  // Init
+  populateSubcats();
+  preselectFromQuery();
+  </script>
+</body>
+</html>
