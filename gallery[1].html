@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Glassland – Реализирани проекти</title>
+  <style>
+    :root { --bg:#0b0f14; --card:#121923; --muted:#9fb0c3; --acc:#21a3ff; --text:#e9f2ff; }
+    *{box-sizing:border-box}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);margin:0}
+    nav{display:flex;gap:16px;padding:14px 20px;background:#111723;border-bottom:1px solid #1e2a36;position:sticky;top:0}
+    nav a{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:12px}
+    nav a:hover{background:#182332;color:#fff}
+    main{max-width:1100px;margin:24px auto;padding:0 16px 60px}
+    h1{font-size:28px;margin:8px 0 16px}
+    p{color:#9fb0c3}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+    .grid img{width:100%;border-radius:12px;cursor:pointer;border:1px solid #1d2a36}
+    footer{color:#7f95ab;font-size:12px;margin-top:18px}
+    /* Lightbox */
+    #lightbox{display:none;position:fixed;z-index:1000;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);align-items:center;justify-content:center}
+    #lightbox img{max-width:90%;max-height:90%;border-radius:12px;box-shadow:0 0 20px #000}
+    #lightbox:target{display:flex}
+    #lightbox a{position:absolute;top:20px;right:20px;color:#fff;font-size:32px;text-decoration:none}
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html">Начало</a>
+    <a href="services.html">Услуги</a>
+    <a href="categories.html">Категории</a>
+    <a href="calculator.html">Калкулатор</a>
+  </nav>
+  <main>
+    <h1>Реализирани проекти</h1>
+    <p>Тук може да разгледате някои от нашите реализирани обекти. Галерията се обновява редовно с нови снимки.</p>
+
+    <div class="grid">
+      <a href="#img1"><img src="https://via.placeholder.com/600x400?text=Пример+1" alt="Пример 1"></a>
+      <a href="#img2"><img src="https://via.placeholder.com/600x400?text=Пример+2" alt="Пример 2"></a>
+      <a href="#img3"><img src="https://via.placeholder.com/600x400?text=Пример+3" alt="Пример 3"></a>
+    </div>
+
+    <footer>© Glassland</footer>
+  </main>
+
+  <!-- Lightbox images -->
+  <div id="img1" class="lightbox" >
+    <div id="lightbox">
+      <img src="https://via.placeholder.com/1200x800?text=Пример+1" alt="Пример 1">
+      <a href="#">×</a>
+    </div>
+  </div>
+  <div id="img2" class="lightbox">
+    <div id="lightbox">
+      <img src="https://via.placeholder.com/1200x800?text=Пример+2" alt="Пример 2">
+      <a href="#">×</a>
+    </div>
+  </div>
+  <div id="img3" class="lightbox">
+    <div id="lightbox">
+      <img src="https://via.placeholder.com/1200x800?text=Пример+3" alt="Пример 3">
+      <a href="#">×</a>
+    </div>
+  </div>
+</body>
+</html>
