@@ -1,74 +1,75 @@
-<!DOCTYPE html>
-<html lang="bg">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Галерия - Glassland</title>
-  <link rel="stylesheet" href="style.css">
-
-  <!-- Lightbox2 CSS -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
-</head>
-<body>
-
-<header>
-  <h1>Галерия</h1>
-</header>
-
-<nav>
-  <a href="index.html">Начало</a>
-  <a href="services.html">Услуги</a>
-  <a href="gallery.html">Галерия</a>
-</nav>
-
 <section class="gallery">
   <h2>Наши проекти</h2>
 
-  <!-- Душ кабини -->
-  <h3>Душ кабини</h3>
-  <div class="grid">
-    <a href="KABINA2.jpg" data-lightbox="galeria-kabini" data-title="Душ кабина">
+  <!-- Филтър бутони -->
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">Всички</button>
+    <button class="filter-btn" data-filter="kabini">Душ кабини</button>
+    <button class="filter-btn" data-filter="ogledala">Огледала</button>
+    <button class="filter-btn" data-filter="stakla">Стъкла</button>
+  </div>
+
+  <!-- Решетка със снимки -->
+  <div class="grid" id="galleryGrid">
+    <!-- Душ кабини -->
+    <a href="KABINA2.jpg" data-lightbox="galeria" data-title="Душ кабина" class="item kabini">
       <img src="KABINA2.jpg" alt="Душ кабина">
     </a>
-    <a href="KABINA3.png" data-lightbox="galeria-kabini" data-title="Душ кабина">
+    <a href="KABINA3.png" data-lightbox="galeria" data-title="Душ кабина" class="item kabini">
       <img src="KABINA3.png" alt="Душ кабина">
     </a>
-    <a href="KABINA4.jpg" data-lightbox="galeria-kabini" data-title="Душ кабина">
+    <a href="KABINA4.jpg" data-lightbox="galeria" data-title="Душ кабина" class="item kabini">
       <img src="KABINA4.jpg" alt="Душ кабина">
     </a>
-  </div>
 
-  <!-- Огледала -->
-  <h3>Огледала</h3>
-  <div class="grid">
-    <a href="ogledalo1.jpg" data-lightbox="galeria-ogledala" data-title="Огледало по поръчка">
-      <img src="ogledalo1.jpg" alt="Огледало по поръчка">
+    <!-- Огледала -->
+    <a href="ogledalo1.jpg" data-lightbox="galeria" data-title="Огледало" class="item ogledala">
+      <img src="ogledalo1.jpg" alt="Огледало">
     </a>
-    <a href="ogledalo2.jpg" data-lightbox="galeria-ogledala" data-title="Огледало с фасет">
-      <img src="ogledalo2.jpg" alt="Огледало с фасет">
+    <a href="ogledalo2.jpg" data-lightbox="galeria" data-title="Огледало" class="item ogledala">
+      <img src="ogledalo2.jpg" alt="Огледало">
     </a>
-    <a href="ogledalo3.jpg" data-lightbox="galeria-ogledala" data-title="Огледало за баня">
-      <img src="ogledalo3.jpg" alt="Огледало за баня">
+    <a href="ogledalo3.jpg" data-lightbox="galeria" data-title="Огледало" class="item ogledala">
+      <img src="ogledalo3.jpg" alt="Огледало">
     </a>
-    <a href="ogledalo4.png" data-lightbox="galeria-ogledala" data-title="Огледало – специален модел">
-      <img src="ogledalo4.png" alt="Огледало – специален модел">
+    <a href="ogledalo4.png" data-lightbox="galeria" data-title="Огледало" class="item ogledala">
+      <img src="ogledalo4.png" alt="Огледало">
     </a>
-    <a href="ogledalo5.jpg" data-lightbox="galeria-ogledala" data-title="Огледало по поръчка">
-      <img src="ogledalo5.jpg" alt="Огледало по поръчка">
+    <a href="ogledalo5.jpg" data-lightbox="galeria" data-title="Огледало" class="item ogledala">
+      <img src="ogledalo5.jpg" alt="Огледало">
     </a>
-  </div>
 
-  <!-- Стъкла -->
-  <h3>Стъкла</h3>
-  <div class="grid">
-    <a href="ogneuporno.jpg" data-lightbox="galeria-stakla" data-title="Огнеупорно стъкло">
+    <!-- Стъкла -->
+    <a href="ogneuporno.jpg" data-lightbox="galeria" data-title="Огнеупорно стъкло" class="item stakla">
       <img src="ogneuporno.jpg" alt="Огнеупорно стъкло">
     </a>
-    <a href="ogneuporno2.jpg" data-lightbox="galeria-stakla" data-title="Огнеупорно стъкло">
+    <a href="ogneuporno2.jpg" data-lightbox="galeria" data-title="Огнеупорно стъкло" class="item stakla">
       <img src="ogneuporno2.jpg" alt="Огнеупорно стъкло">
     </a>
   </div>
 </section>
+
+<!-- Лека логика за филтъра -->
+<script>
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      // активен бутон
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const filter = btn.getAttribute('data-filter');
+      const items = document.querySelectorAll('#galleryGrid .item');
+
+      items.forEach(it => {
+        if (filter === 'all') {
+          it.style.display = '';
+        } else {
+          it.style.display = it.classList.contains(filter) ? '' : 'none';
+        }
+      });
+    });
+  });
+</script>
 
 <!-- Lightbox2 JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
